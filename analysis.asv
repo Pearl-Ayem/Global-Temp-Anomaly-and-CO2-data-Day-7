@@ -1,0 +1,36 @@
+%% RAW DATA 
+
+clear
+close all
+clc
+
+[data txt raw] = xlsread('Data.xls');
+
+year = data(:,1);
+gtanom = data(:,2); % K, global temp anomaly
+CO2 = data(:,3); % ppm, atmospheric CO2 concentration
+
+
+%% RAW CHARTS
+
+figure
+subplot(211)
+plot(year,gtanom,'k'); 
+xlabel('Year'); 
+ylabel({'Temp ' ,'Anomaly ({\circ}C)'})
+title({'Global Temperature Anomaly' ,'from 1880-2017'})
+axis([1878,2018,-1,1.1])
+mgtanom = ~isnan(gtanom);
+[coef,bint,r,rint,stats] = regress(gtanom,[ones(size(gtanom)) year]);
+gtanomlinfit = coef(1)+coef(2).*year;
+gtanomlinfitbotlim = coef(1)+bint(2,1).*year;
+gtanomlinfittoplim = coef(1)+bint(2,2).*year;
+hold on
+plot(year(mgtanom),gtanomlinfit(mgtanom),'r'); 
+plot(year(mgtanom),gtanomlinfitbotlim(mgtanom),'r--'); 
+plot(year(mgtanom),gtanomlinfittoplim(mgtanom),'r--'); 
+text(1900,0.9,['Slope = ',num2str(round(coef(2),3)),...
+    '; R^2=',num2str(round(stats(1),3))...
+    '; conf = [' num2str(round(bint(2,1),3)) ','...
+    num2str(round(bint(2,2),3)) ']'])
+hold off
