@@ -87,7 +87,7 @@ gtanomlinfittoplim = coef(1)+bint(2,2).*overlap(:,2);
 [h,p,ci,stats] = ttest(overlap(:,2));
 
 figure
-plot(overlap(:,3),overlap(:,2),'k'); 
+scatter(overlap(:,3),overlap(:,2),10,'ko','filled'); 
 ylabel('Global Temperature Anomaly'); 
 xlabel('CO_2 (ppm)')
 title({'Global Temperature Anomaly VS' ,'Atmospheric CO2 from 1959-2017'})
