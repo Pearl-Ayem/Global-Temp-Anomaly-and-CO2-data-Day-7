@@ -113,3 +113,16 @@ title({'Variance in the Linear Regression Model'});
 [~,~,~,~,stats] = regress(gtanomlinfit,[ones(size(gtanomlinfit)) overlap(:,2)]);
 text(-0.15,0.8,['R^2 = ',num2str(stats(1)),...
     '; p-value = ' num2str(stats(3))]);
+
+%% Extrapolate CO2 in 1880
+
+
+[coef,bint,~,~,~] = regress(overlap(:,3),[ones(size(overlap(:,3))) overlap(:,2)]);
+co2trend = coef(1)+coef(2).*gtanom;
+
+figure
+plot(year,co2trend); 
+xlabel('Years'); 
+ylabel('CO_2 (ppm)')
+title({'Extrapolated CO2 timeseries'});
+
