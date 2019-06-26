@@ -38,6 +38,7 @@ text(1880,0.9,['Slope = ',num2str(round(coef(2),3)),...
     'Tstat = ' num2str(stats.tstat)])
 hold off
 
+tempTrendline = gtanomlinfit;
 
 subplot(212)
 plot(year,CO2,'k'); 
@@ -65,6 +66,8 @@ text(1955,410,['Slope = ',num2str(round(coef(2),3)),...
     'Tstat = ' num2str(stats.tstat)])
 hold off
 
+co2Trendline = gtanomlinfit;
+
 %% CORRELATION BETWEEN CO2 AND TEMP
 
 overlap = zeros();
@@ -88,7 +91,7 @@ gtanomlinfittoplim = coef(1)+bint(2,2).*overlap(:,2);
 
 figure
 scatter(overlap(:,3),overlap(:,2),10,'ko','filled'); 
-ylabel('Global Temperature Anomaly'); 
+ylabel('Global Temperature Anomaly ({\circ}C)'); 
 xlabel('CO_2 (ppm)')
 title({'Global Temperature Anomaly VS' ,'Atmospheric CO2 from 1959-2017'});
 %axis([1955,2018,300,420])
@@ -107,8 +110,8 @@ hold off
 %% Variance in the linear regression model
 figure 
 scatter(overlap(:,2),gtanomlinfit,10,'ko','filled');
-ylabel('Regreesed Global Temperature Anomaly'); 
-xlabel('Global Temperature Anomaly')
+ylabel('Regreesed Global Temperature Anomaly ({\circ}C)'); 
+xlabel('Global Temperature Anomaly ({\circ}C)')
 title({'Variance in the Linear Regression Model'});
 [~,~,~,~,stats] = regress(gtanomlinfit,[ones(size(gtanomlinfit)) overlap(:,2)]);
 text(-0.15,0.8,['R^2 = ',num2str(stats(1)),...
@@ -126,3 +129,26 @@ xlabel('Years');
 ylabel('CO_2 (ppm)')
 title({'Extrapolated CO2 timeseries'});
 
+[coef,bint,~,~,~] = regress(co2trend,[ones(size(co2trend)) year]);
+co2ExpTrendline = coef(1)+coef(2).*year;
+
+hold on
+plot(year,co2ExpTrendline,'-r');
+hold off
+
+%% Residuals by difference
+
+tempDiff = gtanom - tempTrendline;
+co2Diff = CO2 - co2Trendline;
+
+figure
+scatter(year,tempDiff,10,'ko','filled'); 
+xlabel('Year'); 
+ylabel({'Temp Residuals ({\circ}C)'})
+title({'Global Temperature Anomaly Residuals from 1880-2017'})
+
+figure
+scatter(year,co2Diff,10,'ko','filled'); 
+xlabel('Year'); 
+ylabel({'CO2 Residuals ({\circ}C)'})
+title({'Atmospheric CO2 Residuals from 1880-2017'})
