@@ -90,7 +90,7 @@ figure
 scatter(overlap(:,3),overlap(:,2),10,'ko','filled'); 
 ylabel('Global Temperature Anomaly'); 
 xlabel('CO_2 (ppm)')
-title({'Global Temperature Anomaly VS' ,'Atmospheric CO2 from 1959-2017'})
+title({'Global Temperature Anomaly VS' ,'Atmospheric CO2 from 1959-2017'});
 %axis([1955,2018,300,420])
 
 
@@ -102,3 +102,14 @@ text(310,0.9,['Slope = ',num2str(round(coef(2),3)),...
     '; p-value = ' num2str(p) ','...
     'Tstat = ' num2str(stats.tstat)]);
 hold off
+
+
+%% Variance in the linear regression model
+figure 
+scatter(overlap(:,2),gtanomlinfit,10,'ko','filled');
+ylabel('Regreesed Global Temperature Anomaly'); 
+xlabel('Global Temperature Anomaly')
+title({'Variance in the Linear Regression Model'});
+[~,~,~,~,stats] = regress(gtanomlinfit,[ones(size(gtanomlinfit)) overlap(:,2)]);
+text(-0.15,0.8,['R^2 = ',num2str(stats(1)),...
+    '; p-value = ' num2str(stats(3))]);
